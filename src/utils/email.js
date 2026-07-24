@@ -40,10 +40,16 @@ async function getTransporter() {
 
   if (isConfigured) {
     logger.info('Using configured SMTP provider.');
+    const port = parseInt(process.env.SMTP_PORT || '587', 10);
+    // A porta 465 exige conexões SSL seguras (secure: true).
+    // Portas como 587 ou 2525 usam STARTTLS (secure: false).
+    const secure = port === 465;
+
     // Cria transporte com os dados do SMTP real inserido pelo administrador do sistema
     transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.mailtrap.io',
-      port: parseInt(process.env.SMTP_PORT || '2525', 10),
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: port,
+      secure: secure,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
