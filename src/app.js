@@ -8,6 +8,9 @@
 // Importa o framework Express para criação de rotas e servidores HTTP
 const express = require('express');
 
+//BANKAAAAAAIIIIII
+
+
 // Importa o CORS (Cross-Origin Resource Sharing), que permite que o frontend (em outra porta/domínio) acesse a API
 const cors = require('cors');
 
