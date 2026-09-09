@@ -19,9 +19,9 @@ const path = require('path');
 // Módulo nativo File System para gerenciar e criar diretórios no servidor
 const fs = require('fs');
 
-// Define o diretório de destino onde os arquivos enviados serão fisicamente salvos.
-// Neste caso, na pasta pública 'public/uploads' para que possam ser servidos estaticamente pelo servidor Web.
-const uploadDir = path.resolve(__dirname, '../../public/uploads');
+// Diretório de destino (permite override via UPLOAD_DIR — usado pelos testes
+// para isolar uploads por arquivo de teste em execuções paralelas).
+const uploadDir = process.env.UPLOAD_DIR || path.resolve(__dirname, '../../public/uploads');
 
 // Garante que o diretório de upload exista no disco rígido do servidor.
 // Se não existir (ex: primeira inicialização), o fs.mkdirSync o criará recursivamente.

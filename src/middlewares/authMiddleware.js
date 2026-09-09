@@ -10,7 +10,11 @@
 const jwt = require('jsonwebtoken');
 
 // Importa o modelo de Usuário para interagir com o banco de dados SQLite e validar a existência do usuário.
-const UsuarioModel = require('../models/UsuarioModel');
+const UsuarioDAO = require('../dao/UsuarioDAO');
+
+// Denylist de logout (UC13) + hash de tokens.
+const TokenRevogadoDAO = require('../dao/TokenRevogadoDAO');
+const { hashToken } = require('../utils/tokens');
 
 /**
  * Middleware que intercepta a requisição e valida a presença e integridade do token JWT.
@@ -42,7 +46,7 @@ async function authMiddleware(req, res, next) {
     
     // Busca o usuário no banco de dados utilizando o ID decodificado do token payload.
     // Isso garante uma camada extra de segurança caso o usuário tenha sido excluído recentemente da plataforma.
-    const user = await UsuarioModel.findById(decoded.id);
+    const user = await UsuarioDAO.findById(decoded.id);
     if (!user) {
       return res.status(401).json({
         status: 'error',
@@ -53,6 +57,17 @@ async function authMiddleware(req, res, next) {
     // Anexa o objeto do usuário ao objeto de requisição (req).
     // Dessa forma, qualquer rota ou middleware seguinte que utilize 'authMiddleware' terá acesso instantâneo a 'req.user'.
     req.user = user;
+
+    // Expõe o token bruto para fluxos que precisam dele (ex: logout/UC13).
+    req.token = token;
+
+    // UC13: token revogado no logout não reentra (pós-condição do Encerrar Sessão).
+    if (await TokenRevogadoDAO.existePorHash(hashToken(token))) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Sessão encerrada. Faça login novamente.'
+      });
+    }
     
     // Chama a função 'next()' para sinalizar ao Express que este middleware concluiu sua tarefa com sucesso
     // e que a requisição pode avançar para o próximo manipulador (middleware ou controller).

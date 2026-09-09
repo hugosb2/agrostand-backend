@@ -11,6 +11,9 @@ const express = require('express');
 // Importa o AutenticacaoController que implementa as regras de negócio para registro, login e redefinição de senha.
 const AutenticacaoController = require('../controllers/AutenticacaoController');
 
+// Logout exige sessão ativa.
+const authMiddleware = require('../middlewares/authMiddleware');
+
 // Cria uma nova instância de roteador do Express.
 const router = express.Router();
 
@@ -41,6 +44,13 @@ router.post('/forgot-password', AutenticacaoController.forgotPassword);
  * Mapeamento: AutenticacaoController.resetPassword
  */
 router.post('/reset-password', AutenticacaoController.resetPassword);
+
+/**
+ * Rota: POST /logout
+ * Descrição: Encerra a sessão revogando o JWT atual (UC13). Exige autenticação.
+ * Mapeamento: AutenticacaoController.logout
+ */
+router.post('/logout', authMiddleware, AutenticacaoController.logout);
 
 // Exporta o roteador configurado para ser integrado ao ponto central de rotas.
 module.exports = router;

@@ -42,20 +42,6 @@ class Categoria {
 
   set nome(value) { this.#nome = value; }
   set descricao(value) { this.#descricao = value; }
-
-  /**
-   * Método de conversão para JSON.
-   * Facilita a representação plana da categoria na comunicação externa (APIs).
-   * 
-   * @returns {Object} Representação simples/serializável da categoria.
-   */
-  toJSON() {
-    return {
-      id: this.#id,
-      nome: this.#nome,
-      descricao: this.#descricao
-    };
-  }
 }
 
 module.exports = Categoria;

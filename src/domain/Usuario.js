@@ -104,24 +104,6 @@ class Usuario {
     if (novosDados.email) this.#email = novosDados.email;
     if (novosDados.senhaHash) this.#senhaHash = novosDados.senhaHash;
   }
-
-  /**
-   * Método de conversão para objeto simples.
-   * É uma boa prática para que a entidade possa ser convertida em um formato padrão (JSON)
-   * sem expor dados confidenciais (por exemplo, omitindo a propriedade privada `#senhaHash`).
-   * 
-   * @returns {Object} Representação pública e serializável do usuário.
-   */
-  toJSON() {
-    return {
-      id: this.#id,
-      nome: this.#nome,
-      sobrenome: this.#sobrenome,
-      email: this.#email,
-      telefone: this.#telefone,
-      dataCadastro: this.#dataCadastro
-    };
-  }
 }
 
 module.exports = Usuario;

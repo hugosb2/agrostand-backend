@@ -16,9 +16,11 @@
 const fs = require('fs');
 const path = require('path');
 
-// Diretório local de uploads. Resolve o caminho absoluto apontando para 'public/uploads'
-// que é o local onde o middleware (como o multer) salva temporariamente os arquivos físicos.
-const uploadDir = path.resolve(__dirname, '../../public/uploads');
+// Diretório local de uploads (mesmo override via UPLOAD_DIR do multer;
+// resolvido por chamada para enxergar o env mesmo com require antecipado).
+function resolveUploadDir() {
+  return process.env.UPLOAD_DIR || path.resolve(__dirname, '../../public/uploads');
+}
 
 class ArmazenamentoService {
   /**
@@ -82,7 +84,7 @@ class ArmazenamentoService {
       if (parts.length > 1) {
         const filename = parts[1];
         // Reconstrói o caminho físico absoluto onde o arquivo está guardado no disco do servidor
-        const filePath = path.join(uploadDir, filename);
+        const filePath = path.join(resolveUploadDir(), filename);
         
         // Verifica se o arquivo realmente existe no disco antes de tentar excluí-lo
         if (fs.existsSync(filePath)) {

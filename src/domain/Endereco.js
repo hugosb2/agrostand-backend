@@ -84,26 +84,6 @@ class Endereco {
   validar() {
     return !!(this.#rua && this.#numero && this.#bairro && this.#cidade && this.#uf && this.#zona);
   }
-
-  /**
-   * Método de conversão para JSON.
-   * Mapeia os atributos privados para um formato público legível.
-   * 
-   * @returns {Object} JSON contendo os dados do endereço.
-   */
-  toJSON() {
-    return {
-      id: this.#id,
-      clienteId: this.#clienteId,
-      rua: this.#rua,
-      numero: this.#numero,
-      bairro: this.#bairro,
-      cep: this.#cep,
-      cidade: this.#cidade,
-      uf: this.#uf,
-      zona: this.#zona
-    };
-  }
 }
 
 module.exports = Endereco;

@@ -48,20 +48,6 @@ class Imagem {
   set url(value) { this.#url = value; }
   set tipo(value) { this.#tipo = value; }
   set ordem(value) { this.#ordem = value; }
-
-  /**
-   * Método de conversão para JSON.
-   * 
-   * @returns {Object} JSON contendo os metadados estruturados da imagem.
-   */
-  toJSON() {
-    return {
-      id: this.#id,
-      url: this.#url,
-      tipo: this.#tipo,
-      ordem: this.#ordem
-    };
-  }
 }
 
 module.exports = Imagem;

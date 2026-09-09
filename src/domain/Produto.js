@@ -48,20 +48,6 @@ class Produto {
   set nome(value) { this.#nome = value; }
   set descricao(value) { this.#descricao = value; }
   set preco(value) { this.#preco = value; }
-
-  /**
-   * Método de conversão para JSON.
-   * 
-   * @returns {Object} JSON contendo os dados do produto para fins de exportação ou API.
-   */
-  toJSON() {
-    return {
-      id: this.#id,
-      nome: this.#nome,
-      descricao: this.#descricao,
-      preco: this.#preco
-    };
-  }
 }
 
 module.exports = Produto;

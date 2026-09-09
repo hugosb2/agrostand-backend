@@ -51,57 +51,6 @@ class Anunciante extends Cliente {
     anuncio.publicar();
     this.#anuncios.push(anuncio);
   }
-
-  /**
-   * Operação de Domínio: Permite alterar os dados de um anúncio de propriedade deste anunciante.
-   * Busca o anúncio correspondente na coleção interna e executa suas edições.
-   * 
-   * @param {Anuncio} anuncioModificado - Instância do anúncio modificado.
-   */
-  editarAnuncio(anuncioModificado) {
-    if (!anuncioModificado) throw new Error("Anúncio inválido para edição.");
-    const index = this.#anuncios.findIndex(a => a.id === anuncioModificado.id);
-    if (index === -1) {
-      throw new Error("Este anúncio não pertence a este anunciante ou não foi encontrado.");
-    }
-    
-    this.#anuncios[index] = anuncioModificado;
-    anuncioModificado.editar();
-  }
-
-  /**
-   * Remove um anúncio associado a partir de seu identificador único.
-   * Filtra a lista interna removendo o item desejado.
-   * 
-   * @param {number|string} id - O identificador único do anúncio a ser removido.
-   */
-  removerAnuncio(id) {
-    this.#anuncios = this.#anuncios.filter(a => a.id !== id);
-  }
-
-  /**
-   * Retorna a lista de anúncios ativos para fins de gerenciamento e controle de estoque/produtos.
-   * 
-   * @returns {Array<Anuncio>} Coleção de anúncios de propriedade do anunciante.
-   */
-  gerenciarMeusProdutos() {
-    return this.#anuncios;
-  }
-
-  /**
-   * Método de conversão para JSON.
-   * Mescla os campos JSON herdados da hierarquia Cliente/Usuario com a serialização
-   * recursiva de sua coleção privada de anúncios.
-   * 
-   * @returns {Object} Representação simples/serializável do anunciante.
-   */
-  toJSON() {
-    return {
-      ...super.toJSON(),
-      // Serializa recursivamente cada anúncio que possuir o método toJSON()
-      anuncios: this.#anuncios.map(a => (typeof a.toJSON === 'function' ? a.toJSON() : a))
-    };
-  }
 }
 
 module.exports = Anunciante;

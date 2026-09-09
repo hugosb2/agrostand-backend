@@ -1,9 +1,9 @@
 /**
  * @file errorMiddleware.js
- * @description Middleware global de tratamento de erros para a aplicação Express.
- * No Express, middlewares de tratamento de erro devem receber exatamente 4 parâmetros: (err, req, res, next).
- * A presença do primeiro parâmetro 'err' indica ao Express que esta função deve ser invocada
- * apenas quando ocorrer um erro em alguma rota ou middleware anterior.
+ * @description @ControllerAdvice da aplicação: traduz erros de negócio
+ * (`AppError` com `expose`, lançados pelos Services) para o envelope legado
+ * `{status:'error', message}` com o HTTP code correspondente. Erros
+ * inesperados seguem como 500 no formato detalhado.
  */
 
 // Importa a instância personalizada de logger (usando winston ou similar) para persistir e exibir logs formatados de erro.
@@ -18,6 +18,20 @@ const logger = require('../utils/logger');
  * @param {Function} next - Função callback do Express (obrigatório na assinatura, mesmo se não invocado).
  */
 function errorMiddleware(err, req, res, next) {
+  // Erro de negócio esperado (Service): envelope legado, sem stack, log como WARN.
+  if (err && err.expose && err.status && err.status < 500) {
+    logger.warn(`Business error ${err.status} during ${req.method} ${req.originalUrl}`, {
+      status: err.status,
+      message: err.message,
+      ip: req.ip,
+      userId: req.user ? req.user.id : null
+    });
+    return res.status(err.status).json({
+      status: 'error',
+      message: err.message || 'Erro na requisição.'
+    });
+  }
+
   // Define o status HTTP padrão como 500 (Erro Interno do Servidor) caso nenhum status específico tenha sido fornecido.
   const status = err.status || 500;
   

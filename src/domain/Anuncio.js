@@ -106,17 +106,18 @@ class Anuncio {
   }
 
   /**
-   * Transiciona o status do anúncio para 'REMOVIDO', marcando uma exclusão lógica.
-   */
-  remover() {
-    this.#status = 'REMOVIDO';
-  }
-
-  /**
    * Coloca o anúncio temporariamente na lixeira, permitindo recuperação posterior se necessário.
    */
   moverParaLixeira() {
     this.#status = 'EM_LIXEIRA';
+  }
+
+  /**
+   * Restaura um anúncio da lixeira, tornando-o novamente visível no catálogo.
+   * Espelha `moverParaLixeira()` para o fluxo de restauração (RS09).
+   */
+  restaurar() {
+    this.#status = 'ATIVO';
   }
 
   /**
@@ -129,26 +130,6 @@ class Anuncio {
    */
   validar() {
     return !!(this.#produto && this.#categoria && this.#endereco && this.#imagens.length > 0);
-  }
-
-  /**
-   * Método de conversão para JSON.
-   * Converte a entidade e seus sub-objetos agregados recursivamente para uma estrutura limpa
-   * que pode ser enviada por rede ou exibida externamente.
-   * 
-   * @returns {Object} JSON contendo os dados estruturados do anúncio.
-   */
-  toJSON() {
-    return {
-      id: this.#id,
-      dataPublicacao: this.#dataPublicacao,
-      status: this.#status,
-      // Verifica se as entidades internas possuem método toJSON(), garantindo serialização limpa
-      produto: this.#produto ? (typeof this.#produto.toJSON === 'function' ? this.#produto.toJSON() : this.#produto) : null,
-      imagens: this.#imagens.map(i => (typeof i.toJSON === 'function' ? i.toJSON() : i)),
-      categoria: this.#categoria ? (typeof this.#categoria.toJSON === 'function' ? this.#categoria.toJSON() : this.#categoria) : null,
-      endereco: this.#endereco ? (typeof this.#endereco.toJSON === 'function' ? this.#endereco.toJSON() : this.#endereco) : null
-    };
   }
 }
 

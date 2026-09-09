@@ -13,6 +13,13 @@ database.sqlite
 *.sqlite
 *.sqlite3
 *.db
+# SQLite sidecars (WAL mode)
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+*.db-wal
+*.db-shm
 
 # Logs
 logs/

@@ -12,8 +12,8 @@ require('dotenv').config();
 // Importa o aplicativo Express pré-configurado no arquivo app.js
 const app = require('./app');
 
-// Importa a função responsável por conectar e inicializar as tabelas do banco SQLite
-const { initializeDatabase } = require('./config/bancoDeDados');
+// Importa a função responsável por conectar e inicializar as tabelas via Drizzle ORM
+const { initializeDatabase, closeDatabase } = require('./db');
 
 // Importa nossa ferramenta personalizada de logs
 const logger = require('./utils/logger');
@@ -50,6 +50,7 @@ async function startServer() {
       // Fecha o servidor HTTP para novas conexões
       server.close(() => {
         logger.info('Servidor HTTP encerrado.');
+        closeDatabase();
         // Encerra o processo do Node de forma limpa (código de saída 0 = sucesso)
         process.exit(0);
       });
